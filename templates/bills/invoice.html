@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice {{ bill.invoice_no }}</title>
+    <!-- Invoice layout: customize this file freely -->
+    <link href="{{ url_for('static', filename='css/invoice.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="invoice-container">
+    <div class="invoice-header">
+        <div class="shop-info">
+            <h1>{{ settings.shop_name }}</h1>
+            {% if settings.address %}<p>{{ settings.address }}</p>{% endif %}
+            {% if settings.phone %}<p>Phone: {{ settings.phone }}</p>{% endif %}
+            {% if settings.email %}<p>Email: {{ settings.email }}</p>{% endif %}
+            {% if settings.gst_number %}<p>GST: {{ settings.gst_number }}</p>{% endif %}
+        </div>
+        <div class="invoice-meta">
+            <h2>TAX INVOICE</h2>
+            <p><strong>Invoice No:</strong> {{ bill.invoice_no }}</p>
+            <p><strong>Date:</strong> {{ bill.date.strftime('%d-%m-%Y') }}</p>
+        </div>
+    </div>
+
+    <div class="customer-info">
+        <p><strong>Bill To:</strong></p>
+        <p>{{ bill.customer.name }}</p>
+        {% if bill.customer.phone %}<p>Phone: {{ bill.customer.phone }}</p>{% endif %}
+        {% if bill.customer.address %}<p>{{ bill.customer.address }}</p>{% endif %}
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Rate (₹)</th>
+                <th>Amount (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in bill.items %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }} {{ item.product.unit.name if item.product.unit else '' }}</td>
+            <td>{{ "%.2f"|format(item.price) }}</td>
+            <td>{{ "%.2f"|format(item.total) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="invoice-totals">
+        <table>
+            <tr><td>Subtotal:</td><td>₹{{ "%.2f"|format(bill.subtotal) }}</td></tr>
+            <tr><td>Discount:</td><td>₹{{ "%.2f"|format(bill.discount) }}</td></tr>
+            <tr><td>GST:</td><td>₹{{ "%.2f"|format(bill.gst) }}</td></tr>
+            <tr class="grand-total"><td>Grand Total:</td><td>₹{{ "%.2f"|format(bill.grand_total) }}</td></tr>
+            <tr><td>Paid Amount:</td><td>₹{{ "%.2f"|format(bill.paid_amount) }}</td></tr>
+            <tr><td>Balance:</td><td>₹{{ "%.2f"|format(bill.balance) }}</td></tr>
+            <tr><td>Payment Mode:</td><td>{{ bill.payment_mode }}</td></tr>
+        </table>
+    </div>
+
+    <div class="signature-area">
+        <div class="signature-box">
+            <p>Customer Signature</p>
+            <div class="signature-line"></div>
+        </div>
+        <div class="signature-box">
+            <p>Authorized Signature</p>
+            <div class="signature-line"></div>
+        </div>
+    </div>
+
+    <div class="print-actions no-print">
+        <button onclick="window.print()" class="btn-print">Print Invoice</button>
+        <button onclick="window.close()" class="btn-close-win">Close</button>
+    </div>
+</div>
+</body>
+</html>

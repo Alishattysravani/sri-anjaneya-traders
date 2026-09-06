@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Bills{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Bill History</h2>
+    <div>
+        <a href="{{ url_for('bills.export') }}" class="btn btn-outline-success btn-sm"><i class="bi bi-file-earmark-excel"></i> Export</a>
+        <a href="{{ url_for('sales.index') }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> New Bill</a>
+    </div>
+</div>
+<form class="row g-2 mb-3" method="GET">
+    <div class="col-md-3"><input type="text" name="search" class="form-control" placeholder="Invoice or customer..." value="{{ search }}"></div>
+    <div class="col-md-2"><input type="date" name="date_from" class="form-control" value="{{ date_from }}"></div>
+    <div class="col-md-2"><input type="date" name="date_to" class="form-control" value="{{ date_to }}"></div>
+    <div class="col-auto"><button class="btn btn-primary">Filter</button></div>
+</form>
+<div class="card shadow-sm">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Paid</th><th>Balance</th><th>Mode</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for b in bills %}
+        <tr>
+            <td>{{ b.invoice_no }}</td>
+            <td>{{ b.date }}</td>
+            <td>{{ b.customer.name }}</td>
+            <td>₹{{ "%.2f"|format(b.grand_total) }}</td>
+            <td>₹{{ "%.2f"|format(b.paid_amount) }}</td>
+            <td>₹{{ "%.2f"|format(b.balance) }}</td>
+            <td>{{ b.payment_mode }}</td>
+            <td>
+                <a href="{{ url_for('bills.view', id=b.id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                <a href="{{ url_for('bills.invoice', id=b.id) }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-printer"></i></a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted">No bills found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

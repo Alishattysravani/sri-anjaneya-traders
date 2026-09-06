@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Backup{% endblock %}
+{% block content %}
+<h2>Database Backup</h2>
+<div class="card shadow-sm mt-3"><div class="card-body">
+    {% if is_sqlite %}
+    <p>Download a backup copy of your SQLite database.</p>
+    <a href="{{ url_for('backup.download') }}" class="btn btn-success"><i class="bi bi-download"></i> Download Database Backup</a>
+    {% else %}
+    <div class="alert alert-info">
+        <h5>PostgreSQL Production</h5>
+        <p>Direct database download is available only for SQLite (local development).</p>
+        <p>For PostgreSQL production, use platform backup tools:</p>
+        <ul>
+            <li><strong>Render:</strong> Use Render dashboard to create PostgreSQL backups</li>
+            <li><strong>pg_dump:</strong> <code>pg_dump DATABASE_URL > backup.sql</code></li>
+            <li>Schedule automated backups through your hosting provider</li>
+        </ul>
+    </div>
+    {% endif %}
+</div></div>
+{% endblock %}

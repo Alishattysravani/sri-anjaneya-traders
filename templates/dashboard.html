@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Dashboard</h2>
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Total Products</h6>
+                <h3>{{ total_products }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Total Customers</h6>
+                <h3>{{ total_customers }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Total Suppliers</h6>
+                <h3>{{ total_suppliers }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Total Stock</h6>
+                <h3>{{ "%.0f"|format(total_stock) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm bg-success text-white">
+            <div class="card-body">
+                <h6>Today's Sales</h6>
+                <h3>₹{{ "%.2f"|format(todays_sales) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm bg-primary text-white">
+            <div class="card-body">
+                <h6>Today's Purchases</h6>
+                <h3>₹{{ "%.2f"|format(todays_purchases) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm bg-warning">
+            <div class="card-body">
+                <h6>Customer Outstanding</h6>
+                <h3>₹{{ "%.2f"|format(customer_outstanding) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm bg-danger text-white">
+            <div class="card-body">
+                <h6>Supplier Outstanding</h6>
+                <h3>₹{{ "%.2f"|format(supplier_outstanding) }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning"><strong>Low Stock Products</strong></div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Product</th><th>Stock</th><th>Min</th></tr></thead>
+                    <tbody>
+                    {% for p in low_stock_products %}
+                    <tr><td>{{ p.name }}</td><td>{{ p.stock }}</td><td>{{ p.minimum_stock }}</td></tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-muted text-center">No low stock items</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong>Recent Sales</strong></div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Invoice</th><th>Customer</th><th>Total</th></tr></thead>
+                    <tbody>
+                    {% for b in recent_sales %}
+                    <tr>
+                        <td><a href="{{ url_for('bills.view', id=b.id) }}">{{ b.invoice_no }}</a></td>
+                        <td>{{ b.customer.name }}</td>
+                        <td>₹{{ "%.2f"|format(b.grand_total) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-muted text-center">No recent sales</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong>Recent Purchases</strong></div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>ID</th><th>Supplier</th><th>Total</th></tr></thead>
+                    <tbody>
+                    {% for p in recent_purchases %}
+                    <tr>
+                        <td><a href="{{ url_for('purchases.view', id=p.id) }}">#{{ p.id }}</a></td>
+                        <td>{{ p.supplier.name }}</td>
+                        <td>₹{{ "%.2f"|format(p.subtotal) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-muted text-center">No recent purchases</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if expiring_soon or expired_products %}
+<div class="row g-4 mt-2">
+    {% if expiring_soon %}
+    <div class="col-md-6">
+        <div class="alert alert-warning">
+            <strong>Expiring Soon:</strong>
+            {% for p in expiring_soon %}{{ p.name }} ({{ p.expiry_date }}){% if not loop.last %}, {% endif %}{% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% if expired_products %}
+    <div class="col-md-6">
+        <div class="alert alert-danger">
+            <strong>Expired:</strong>
+            {% for p in expired_products %}{{ p.name }} ({{ p.expiry_date }}){% if not loop.last %}, {% endif %}{% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

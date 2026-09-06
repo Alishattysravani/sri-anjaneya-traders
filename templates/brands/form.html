@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if brand else 'Add' }} Brand{% endblock %}
+{% block content %}
+<h2>{{ 'Edit' if brand else 'Add' }} Brand</h2>
+<div class="card shadow-sm mt-3"><div class="card-body">
+<form method="POST">
+    <div class="mb-3"><label class="form-label">Name *</label><input type="text" name="name" class="form-control" required value="{{ brand.name if brand else '' }}"></div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{{ url_for('brands.index') }}" class="btn btn-secondary">Cancel</a>
+</form>
+</div></div>
+{% endblock %}

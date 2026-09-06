@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Supplier Report{% endblock %}
+{% block content %}
+<h2>Supplier Report</h2>
+<div class="card shadow-sm">
+    <table class="table mb-0">
+        <thead class="table-light"><tr><th>Supplier</th><th>Phone</th><th>Opening</th><th>Purchases</th><th>Payments</th><th>Balance</th></tr></thead>
+        <tbody>
+        {% for row in report_data %}
+        <tr>
+            <td><a href="{{ url_for('suppliers.view', id=row.supplier.id) }}">{{ row.supplier.name }}</a></td>
+            <td>{{ row.supplier.phone or '-' }}</td>
+            <td>₹{{ "%.2f"|format(row.supplier.opening_balance) }}</td>
+            <td>₹{{ "%.2f"|format(row.purchases) }}</td>
+            <td>₹{{ "%.2f"|format(row.payments) }}</td>
+            <td>₹{{ "%.2f"|format(row.supplier.balance) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted">No data.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

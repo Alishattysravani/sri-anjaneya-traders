@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Customer Report{% endblock %}
+{% block content %}
+<h2>Customer Report</h2>
+<div class="card shadow-sm">
+    <table class="table mb-0">
+        <thead class="table-light"><tr><th>Customer</th><th>Phone</th><th>Opening</th><th>Sales</th><th>Payments</th><th>Balance</th></tr></thead>
+        <tbody>
+        {% for row in report_data %}
+        <tr>
+            <td><a href="{{ url_for('customers.view', id=row.customer.id) }}">{{ row.customer.name }}</a></td>
+            <td>{{ row.customer.phone or '-' }}</td>
+            <td>₹{{ "%.2f"|format(row.customer.opening_balance) }}</td>
+            <td>₹{{ "%.2f"|format(row.sales) }}</td>
+            <td>₹{{ "%.2f"|format(row.payments) }}</td>
+            <td>₹{{ "%.2f"|format(row.customer.balance) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted">No data.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

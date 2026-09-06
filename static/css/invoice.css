@@ -1,0 +1,29 @@
+/* Invoice styles - customize freely for your shop */
+@page { size: A4; margin: 15mm; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #333; margin: 0; padding: 20px; }
+.invoice-container { max-width: 210mm; margin: 0 auto; }
+.invoice-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2e7d32; padding-bottom: 15px; margin-bottom: 20px; }
+.shop-info h1 { color: #2e7d32; margin: 0 0 5px; font-size: 24px; }
+.shop-info p { margin: 2px 0; font-size: 13px; }
+.invoice-meta { text-align: right; }
+.invoice-meta h2 { margin: 0 0 10px; color: #555; font-size: 18px; }
+.customer-info { margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 4px; }
+.invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px 10px; text-align: left; }
+.invoice-table th { background: #2e7d32; color: white; }
+.invoice-table td:nth-child(3), .invoice-table td:nth-child(4), .invoice-table td:nth-child(5),
+.invoice-table th:nth-child(3), .invoice-table th:nth-child(4), .invoice-table th:nth-child(5) { text-align: right; }
+.invoice-totals { display: flex; justify-content: flex-end; margin-bottom: 40px; }
+.invoice-totals table td { padding: 4px 15px; }
+.invoice-totals .grand-total td { font-weight: bold; font-size: 16px; border-top: 2px solid #333; }
+.signature-area { display: flex; justify-content: space-between; margin-top: 60px; }
+.signature-box { width: 200px; text-align: center; }
+.signature-line { border-top: 1px solid #333; margin-top: 50px; }
+.print-actions { text-align: center; margin-top: 30px; }
+.btn-print, .btn-close-win { padding: 10px 30px; font-size: 16px; cursor: pointer; margin: 0 10px; border: none; border-radius: 4px; }
+.btn-print { background: #2e7d32; color: white; }
+.btn-close-win { background: #666; color: white; }
+@media print {
+    .no-print { display: none !important; }
+    body { padding: 0; }
+}

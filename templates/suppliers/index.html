@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Suppliers{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Suppliers</h2>
+    <div>
+        <a href="{{ url_for('suppliers.export') }}" class="btn btn-outline-success btn-sm"><i class="bi bi-file-earmark-excel"></i> Export</a>
+        <a href="{{ url_for('suppliers.add') }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Add Supplier</a>
+    </div>
+</div>
+<form class="row g-2 mb-3" method="GET">
+    <div class="col-md-4"><input type="text" name="search" class="form-control" placeholder="Search..." value="{{ search }}"></div>
+    <div class="col-auto"><button class="btn btn-primary">Search</button></div>
+</form>
+<div class="card shadow-sm">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Name</th><th>Phone</th><th>Balance</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for s in suppliers %}
+        <tr>
+            <td>{{ s.name }}</td>
+            <td>{{ s.phone or '-' }}</td>
+            <td>₹{{ "%.2f"|format(s.balance) }}</td>
+            <td>
+                <a href="{{ url_for('suppliers.view', id=s.id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                <a href="{{ url_for('suppliers.edit', id=s.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                <form method="POST" action="{{ url_for('suppliers.delete', id=s.id) }}" class="d-inline" onsubmit="return confirm('Delete?')">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted">No suppliers.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

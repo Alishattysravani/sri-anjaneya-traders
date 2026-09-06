@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Units{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Units</h2>
+    <a href="{{ url_for('units.add') }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Add Unit</a>
+</div>
+<div class="card shadow-sm">
+    <table class="table mb-0">
+        <thead class="table-light"><tr><th>Name</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for u in units %}
+        <tr>
+            <td>{{ u.name }}</td>
+            <td>{{ u.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <a href="{{ url_for('units.edit', id=u.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                <form method="POST" action="{{ url_for('units.delete', id=u.id) }}" class="d-inline" onsubmit="return confirm('Delete?')">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-muted">No units.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
