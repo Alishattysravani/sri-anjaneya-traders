@@ -136,7 +136,7 @@ git push -u origin main
 1. New → **Web Service** → Connect your repo
 2. Settings:
    - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `gunicorn app:app`
+   - **Start Command:** `gunicorn wsgi:app --bind 0.0.0.0:$PORT`
    - **Environment Variables:**
      - `DATABASE_URL` = your PostgreSQL URL
      - `SECRET_KEY` = a strong random string

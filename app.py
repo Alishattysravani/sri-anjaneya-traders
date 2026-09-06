@@ -1,10 +1,10 @@
 import os
 import click
-from werkzeug.security import generate_password_hash
 from flask import Flask
 from config import Config
 from extensions import db, migrate
 import models  # noqa: F401 - register models
+from seeds import seed_data
 from routes.auth import auth_bp
 from routes.dashboard import dashboard_bp
 from routes.products import products_bp
@@ -23,7 +23,7 @@ from routes.audit import audit_bp
 from routes.backup import backup_bp
 
 
-def create_app(config_class=Config):
+def create_app(config_class=Config, init_db=True):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_class)
 
@@ -68,8 +68,8 @@ def create_app(config_class=Config):
     @app.cli.command("init-db")
     def init_db():
         """Initialize database and seed default data."""
-        db.create_all()
-        seed_data()
+        from db_init import initialize_database
+        initialize_database(app)
         click.echo("Database initialized with default data.")
 
     @app.cli.command("seed")
@@ -78,39 +78,14 @@ def create_app(config_class=Config):
         seed_data()
         click.echo("Seed data created.")
 
+    # Auto-init database on startup (Render free tier has no preDeployCommand)
+    auto_init = os.environ.get("AUTO_INIT_DB", "true").lower() not in ("0", "false", "no")
+    if init_db and auto_init:
+        from db_init import initialize_database
+        initialize_database(app)
+
     return app
 
 
-def seed_data():
-    from models.user import User
-    from models.category import Category
-    from models.unit import Unit
-    from models.settings import Settings
-
-    if not User.query.filter_by(username="admin").first():
-        admin = User(
-            username="admin",
-            password_hash=generate_password_hash("admin123"),
-        )
-        db.session.add(admin)
-        print("Created admin user (username: admin, password: admin123)")
-
-    for name in ["Fertilizer", "Seeds", "Pesticides"]:
-        if not Category.query.filter_by(name=name).first():
-            db.session.add(Category(name=name))
-
-    for name in ["Bag", "KG", "Litre", "Packet"]:
-        if not Unit.query.filter_by(name=name).first():
-            db.session.add(Unit(name=name))
-
-    Settings.get_settings()
-    db.session.commit()
-
-
-app = create_app()
-
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        seed_data()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    create_app().run(debug=True, host="0.0.0.0", port=5000)

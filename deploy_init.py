@@ -1,14 +1,12 @@
-"""Initialize database on first deploy (Render/production)."""
+"""Manual database initialization (optional CLI helper)."""
 
-from app import app, seed_data
-from extensions import db
+from wsgi import app
+from db_init import initialize_database
 
 
 def main():
-    with app.app_context():
-        db.create_all()
-        seed_data()
-        print("Database initialized successfully.")
+    initialize_database(app)
+    print("Database initialized successfully.")
 
 
 if __name__ == "__main__":
