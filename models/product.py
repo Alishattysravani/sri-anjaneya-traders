@@ -15,6 +15,10 @@ class Product(db.Model):
     stock = db.Column(db.Float, default=0.0)
     minimum_stock = db.Column(db.Float, default=0.0)
     batch_number = db.Column(db.String(100), nullable=True)
+    packing = db.Column(db.String(50), nullable=True)
+    hsn_code = db.Column(db.String(20), nullable=True)
+    gst_percent = db.Column(db.Float, default=0.0)
+    manufacturing_date = db.Column(db.Date, nullable=True)
     expiry_date = db.Column(db.Date, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(

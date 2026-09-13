@@ -8,6 +8,7 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     phone = db.Column(db.String(20), nullable=True)
+    village = db.Column(db.String(200), nullable=True)
     address = db.Column(db.Text, nullable=True)
     opening_balance = db.Column(db.Float, default=0.0)
     balance = db.Column(db.Float, default=0.0)

@@ -1,72 +1,228 @@
 {% extends "base.html" %}
+
 {% block title %}{{ 'Edit' if product else 'Add' }} Product{% endblock %}
+
 {% block content %}
+
 <h2>{{ 'Edit' if product else 'Add' }} Product</h2>
+
 <div class="card shadow-sm mt-3">
     <div class="card-body">
+
         <form method="POST">
+
             <div class="row g-3">
+
+                <!-- Product Name -->
                 <div class="col-md-6">
                     <label class="form-label">Product Name *</label>
-                    <input type="text" name="name" class="form-control" required value="{{ product.name if product else '' }}">
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        required
+                        value="{{ product.name if product else '' }}"
+                    >
                 </div>
+
+                <!-- Category -->
                 <div class="col-md-6">
                     <label class="form-label">Category *</label>
                     <select name="category_id" class="form-select" required>
                         <option value="">Select</option>
+
                         {% for c in categories %}
-                        <option value="{{ c.id }}" {% if product and product.category_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                        <option
+                            value="{{ c.id }}"
+                            {% if product and product.category_id == c.id %}selected{% endif %}
+                        >
+                            {{ c.name }}
+                        </option>
                         {% endfor %}
+
                     </select>
                 </div>
+
+                <!-- Brand -->
                 <div class="col-md-4">
                     <label class="form-label">Brand</label>
                     <select name="brand_id" class="form-select">
                         <option value="">None</option>
+
                         {% for b in brands %}
-                        <option value="{{ b.id }}" {% if product and product.brand_id == b.id %}selected{% endif %}>{{ b.name }}</option>
+                        <option
+                            value="{{ b.id }}"
+                            {% if product and product.brand_id == b.id %}selected{% endif %}
+                        >
+                            {{ b.name }}
+                        </option>
                         {% endfor %}
+
                     </select>
                 </div>
+
+                <!-- Unit -->
                 <div class="col-md-4">
                     <label class="form-label">Unit *</label>
                     <select name="unit_id" class="form-select" required>
                         <option value="">Select</option>
+
                         {% for u in units %}
-                        <option value="{{ u.id }}" {% if product and product.unit_id == u.id %}selected{% endif %}>{{ u.name }}</option>
+                        <option
+                            value="{{ u.id }}"
+                            {% if product and product.unit_id == u.id %}selected{% endif %}
+                        >
+                            {{ u.name }}
+                        </option>
                         {% endfor %}
+
                     </select>
                 </div>
+
+                <!-- HSN Code -->
                 <div class="col-md-4">
-                    <label class="form-label">Batch Number</label>
-                    <input type="text" name="batch_number" class="form-control" value="{{ product.batch_number if product else '' }}">
+                    <label class="form-label">HSN Code</label>
+                    <input
+                        type="text"
+                        name="hsn_code"
+                        class="form-control"
+                        value="{{ product.hsn_code if product else '' }}"
+                        placeholder="Example: 31021000"
+                    >
                 </div>
+
+                <!-- Lot / Batch Number -->
+                <div class="col-md-4">
+                    <label class="form-label">Lot No. / Batch Number</label>
+                    <input
+                        type="text"
+                        name="batch_number"
+                        class="form-control"
+                        value="{{ product.batch_number if product else '' }}"
+                        placeholder="Enter lot/batch number"
+                    >
+                </div>
+
+                <!-- Manufacturing Date -->
+                <div class="col-md-4">
+                    <label class="form-label">Mfg. Date</label>
+                    <input
+                        type="date"
+                        name="manufacturing_date"
+                        class="form-control"
+                        value="{{ product.manufacturing_date.strftime('%Y-%m-%d') if product and product.manufacturing_date else '' }}"
+                    >
+                </div>
+
+                <!-- Expiry Date -->
+                <div class="col-md-4">
+                    <label class="form-label">Exp. Date</label>
+                    <input
+                        type="date"
+                        name="expiry_date"
+                        class="form-control"
+                        value="{{ product.expiry_date.strftime('%Y-%m-%d') if product and product.expiry_date else '' }}"
+                    >
+                </div>
+
+                <!-- Packing -->
+                <div class="col-md-4">
+                    <label class="form-label">Packing</label>
+                    <input
+                        type="text"
+                        name="packing"
+                        class="form-control"
+                        value="{{ product.packing if product else '' }}"
+                        placeholder="Example: 50 KG"
+                    >
+                </div>
+
+                <!-- GST Percentage -->
+                <div class="col-md-4">
+                    <label class="form-label">GST %</label>
+                    <input
+                        type="number"
+                        name="gst_percent"
+                        class="form-control"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value="{{ product.gst_percent if product else 0 }}"
+                        placeholder="Example: 5"
+                    >
+                </div>
+
+                <!-- Purchase Price -->
                 <div class="col-md-3">
                     <label class="form-label">Purchase Price</label>
-                    <input type="number" step="0.01" min="0" name="purchase_price" class="form-control" value="{{ product.purchase_price if product else 0 }}">
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        name="purchase_price"
+                        class="form-control"
+                        value="{{ product.purchase_price if product else 0 }}"
+                    >
                 </div>
+
+                <!-- Selling Price -->
                 <div class="col-md-3">
                     <label class="form-label">Selling Price</label>
-                    <input type="number" step="0.01" min="0" name="selling_price" class="form-control" value="{{ product.selling_price if product else 0 }}">
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        name="selling_price"
+                        class="form-control"
+                        value="{{ product.selling_price if product else 0 }}"
+                    >
                 </div>
+
+                <!-- Stock -->
                 <div class="col-md-3">
                     <label class="form-label">Stock</label>
-                    <input type="number" step="0.01" min="0" name="stock" class="form-control" value="{{ product.stock if product else 0 }}">
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        name="stock"
+                        class="form-control"
+                        value="{{ product.stock if product else 0 }}"
+                    >
                 </div>
+
+                <!-- Minimum Stock -->
                 <div class="col-md-3">
                     <label class="form-label">Minimum Stock</label>
-                    <input type="number" step="0.01" min="0" name="minimum_stock" class="form-control" value="{{ product.minimum_stock if product else 0 }}">
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        name="minimum_stock"
+                        class="form-control"
+                        value="{{ product.minimum_stock if product else 0 }}"
+                    >
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Expiry Date</label>
-                    <input type="date" name="expiry_date" class="form-control" value="{{ product.expiry_date if product and product.expiry_date else '' }}">
-                </div>
+
             </div>
-            <div class="mt-3">
-                <button type="submit" class="btn btn-success">Save</button>
-                <a href="{{ url_for('products.index') }}" class="btn btn-secondary">Cancel</a>
+
+            <!-- Buttons -->
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">
+                    {{ 'Update Product' if product else 'Save Product' }}
+                </button>
+
+                <a
+                    href="{{ url_for('products.index') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
             </div>
+
         </form>
+
     </div>
 </div>
+
 {% endblock %}

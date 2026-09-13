@@ -1,29 +1,671 @@
-/* Invoice styles - customize freely for your shop */
-@page { size: A4; margin: 15mm; }
-body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #333; margin: 0; padding: 20px; }
-.invoice-container { max-width: 210mm; margin: 0 auto; }
-.invoice-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2e7d32; padding-bottom: 15px; margin-bottom: 20px; }
-.shop-info h1 { color: #2e7d32; margin: 0 0 5px; font-size: 24px; }
-.shop-info p { margin: 2px 0; font-size: 13px; }
-.invoice-meta { text-align: right; }
-.invoice-meta h2 { margin: 0 0 10px; color: #555; font-size: 18px; }
-.customer-info { margin-bottom: 20px; padding: 10px; background: #f9f9f9; border-radius: 4px; }
-.invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-.invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px 10px; text-align: left; }
-.invoice-table th { background: #2e7d32; color: white; }
-.invoice-table td:nth-child(3), .invoice-table td:nth-child(4), .invoice-table td:nth-child(5),
-.invoice-table th:nth-child(3), .invoice-table th:nth-child(4), .invoice-table th:nth-child(5) { text-align: right; }
-.invoice-totals { display: flex; justify-content: flex-end; margin-bottom: 40px; }
-.invoice-totals table td { padding: 4px 15px; }
-.invoice-totals .grand-total td { font-weight: bold; font-size: 16px; border-top: 2px solid #333; }
-.signature-area { display: flex; justify-content: space-between; margin-top: 60px; }
-.signature-box { width: 200px; text-align: center; }
-.signature-line { border-top: 1px solid #333; margin-top: 50px; }
-.print-actions { text-align: center; margin-top: 30px; }
-.btn-print, .btn-close-win { padding: 10px 30px; font-size: 16px; cursor: pointer; margin: 0 10px; border: none; border-radius: 4px; }
-.btn-print { background: #2e7d32; color: white; }
-.btn-close-win { background: #666; color: white; }
+/* =========================================================
+   SRI ANJANEYA TRADERS - PRINT INVOICE
+   A4 BILL / GST INVOICE
+   ========================================================= */
+
+   @page {
+    size: A4;
+    margin: 8mm;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #111;
+    background: #f2f2f2;
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   INVOICE CONTAINER
+   ========================================================= */
+
+.invoice-container {
+    width: 100%;
+    max-width: 194mm;
+    min-height: 277mm;
+    margin: 15px auto;
+    padding: 7mm;
+    background: #fff;
+    border: 1px solid #111;
+}
+
+
+/* =========================================================
+   SHOP HEADER
+   ========================================================= */
+
+.shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 2px solid #111;
+
+    padding-bottom: 7px;
+    margin-bottom: 6px;
+}
+
+.shop-title {
+    width: 66%;
+    text-align: center;
+    line-height: 1.45;
+}
+
+.shop-title h1 {
+    margin: 0 0 4px 0;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.shop-title div {
+    margin: 1px 0;
+    font-size: 10px;
+}
+
+.bill-heading {
+    width: 29%;
+
+    text-align: center;
+
+    border: 1px solid #111;
+
+    padding: 7px 4px;
+}
+
+.bill-heading h2 {
+    margin: 0 0 4px 0;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.bill-heading h3 {
+    margin: 0;
+
+    font-size: 9px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   BILL DETAILS
+   ========================================================= */
+
+.bill-details {
+    width: 100%;
+
+    border: 1px solid #111;
+
+    margin-bottom: 6px;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.detail-row > div {
+    padding: 5px 7px;
+
+    border-right: 1px solid #111;
+}
+
+.detail-row > div:last-child {
+    border-right: none;
+}
+
+
+/* =========================================================
+   CUSTOMER DETAILS
+   ========================================================= */
+
+.customer-section {
+    border: 1px solid #111;
+
+    margin-bottom: 6px;
+}
+
+.customer-title {
+    text-align: center;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    padding: 4px;
+
+    border-bottom: 1px solid #111;
+}
+
+.customer-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+}
+
+.customer-grid > div {
+    padding: 6px 7px;
+
+    min-height: 28px;
+
+    border-right: 1px solid #111;
+    border-bottom: 1px solid #111;
+}
+
+.customer-grid > div:nth-child(2n) {
+    border-right: none;
+}
+
+.customer-grid > div:last-child,
+.customer-grid > div:nth-last-child(2) {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   PRODUCT TABLE
+   ========================================================= */
+
+.invoice-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+
+    margin-bottom: 6px;
+}
+
+.invoice-table th,
+.invoice-table td {
+    border: 1px solid #111;
+
+    padding: 4px 2px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+.invoice-table th {
+    background: #e8e8e8;
+
+    color: #111;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+.invoice-table td {
+    font-size: 8px;
+
+    line-height: 1.3;
+
+    min-height: 25px;
+}
+
+
+/* =========================================================
+   PRODUCT TABLE COLUMN WIDTHS
+   ========================================================= */
+
+/* S.No. */
+.invoice-table th:nth-child(1),
+.invoice-table td:nth-child(1) {
+    width: 4%;
+}
+
+/* Product */
+.invoice-table th:nth-child(2),
+.invoice-table td:nth-child(2) {
+    width: 18%;
+}
+
+/* HSN */
+.invoice-table th:nth-child(3),
+.invoice-table td:nth-child(3) {
+    width: 7%;
+}
+
+/* Lot No. */
+.invoice-table th:nth-child(4),
+.invoice-table td:nth-child(4) {
+    width: 9%;
+}
+
+/* Mfg. Date */
+.invoice-table th:nth-child(5),
+.invoice-table td:nth-child(5) {
+    width: 7%;
+}
+
+/* Exp. Date */
+.invoice-table th:nth-child(6),
+.invoice-table td:nth-child(6) {
+    width: 7%;
+}
+
+/* Packing */
+.invoice-table th:nth-child(7),
+.invoice-table td:nth-child(7) {
+    width: 8%;
+}
+
+/* Quantity */
+.invoice-table th:nth-child(8),
+.invoice-table td:nth-child(8) {
+    width: 7%;
+}
+
+/* Rate */
+.invoice-table th:nth-child(9),
+.invoice-table td:nth-child(9) {
+    width: 9%;
+}
+
+/* Discount */
+.invoice-table th:nth-child(10),
+.invoice-table td:nth-child(10) {
+    width: 7%;
+}
+
+/* GST */
+.invoice-table th:nth-child(11),
+.invoice-table td:nth-child(11) {
+    width: 7%;
+}
+
+/* Amount */
+.invoice-table th:nth-child(12),
+.invoice-table td:nth-child(12) {
+    width: 10%;
+}
+
+
+/* =========================================================
+   PRODUCT NAME
+   ========================================================= */
+
+.product-name {
+    text-align: left !important;
+    font-weight: 600;
+}
+
+.product-name small {
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 7px;
+    font-weight: normal;
+}
+
+
+/* =========================================================
+   BOTTOM SECTION
+   ========================================================= */
+
+.bottom-section {
+    display: grid;
+
+    grid-template-columns: 55% 45%;
+
+    border: 1px solid #111;
+
+    margin-bottom: 6px;
+}
+
+
+/* =========================================================
+   PAYMENT INFORMATION
+   ========================================================= */
+
+.payment-info {
+    padding: 7px;
+
+    line-height: 1.8;
+
+    border-right: 1px solid #111;
+}
+
+.payment-info div {
+    margin-bottom: 2px;
+}
+
+
+/* =========================================================
+   TOTALS SECTION
+   ========================================================= */
+
+.totals-section {
+    padding: 0;
+}
+
+.totals-section table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.totals-section td {
+    border-bottom: 1px solid #111;
+
+    padding: 5px 7px;
+
+    font-size: 9px;
+}
+
+.totals-section td:first-child {
+    text-align: left;
+
+    font-weight: 600;
+}
+
+.totals-section td:last-child {
+    text-align: right;
+
+    font-weight: 500;
+}
+
+.totals-section tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   GRAND TOTAL
+   ========================================================= */
+
+.totals-section .grand-total td {
+    font-size: 12px;
+
+    font-weight: 700;
+
+    border-top: 2px solid #111;
+
+    background: #eeeeee;
+
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+
+/* =========================================================
+   TERMS & CONDITIONS
+   ========================================================= */
+
+.terms-section {
+    border: 1px solid #111;
+
+    padding: 6px 8px;
+
+    margin-bottom: 6px;
+
+    font-size: 8px;
+
+    line-height: 1.5;
+}
+
+.terms-section strong {
+    font-size: 9px;
+}
+
+.terms-section ol {
+    margin: 3px 0 0 18px;
+
+    padding: 0;
+}
+
+.terms-section li {
+    margin-bottom: 1px;
+}
+
+
+/* =========================================================
+   SIGNATURE AREA
+   ========================================================= */
+
+.signature-area {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-end;
+
+    margin-top: 15px;
+
+    min-height: 65px;
+}
+
+.signature-box {
+    width: 40%;
+
+    text-align: center;
+
+    font-size: 9px;
+}
+
+.signature-space {
+    height: 40px;
+
+    border-bottom: 1px solid #111;
+
+    margin-bottom: 5px;
+}
+
+.signature-box span {
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   PRINT BUTTONS
+   ========================================================= */
+
+.print-actions {
+    text-align: center;
+
+    margin-top: 20px;
+}
+
+.btn-print,
+.btn-close-win {
+    padding: 9px 25px;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    margin: 0 5px;
+
+    border: none;
+
+    border-radius: 3px;
+}
+
+.btn-print {
+    background: #222;
+    color: #fff;
+}
+
+.btn-close-win {
+    background: #777;
+    color: #fff;
+}
+
+.btn-print:hover,
+.btn-close-win:hover {
+    opacity: 0.85;
+}
+
+
+/* =========================================================
+   PRINT SETTINGS
+   ========================================================= */
+
 @media print {
-    .no-print { display: none !important; }
-    body { padding: 0; }
+
+    @page {
+        size: A4;
+        margin: 8mm;
+    }
+
+    html,
+    body {
+        width: 210mm;
+        min-height: 297mm;
+
+        margin: 0;
+        padding: 0;
+
+        background: #fff;
+    }
+
+    body {
+        font-size: 10px;
+    }
+
+    .invoice-container {
+        width: 194mm;
+        min-height: 281mm;
+
+        margin: 0;
+
+        padding: 5mm;
+
+        border: 1px solid #111;
+
+        box-shadow: none;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .invoice-table {
+        page-break-inside: auto;
+    }
+
+    .invoice-table thead {
+        display: table-header-group;
+    }
+
+    .invoice-table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    .customer-section,
+    .bill-details,
+    .bottom-section,
+    .terms-section,
+    .signature-area {
+        page-break-inside: avoid;
+    }
+}
+
+
+/* =========================================================
+   SCREEN VIEW
+   ========================================================= */
+
+@media screen and (max-width: 900px) {
+
+    body {
+        padding: 5px;
+    }
+
+    .invoice-container {
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        margin: 5px auto;
+    }
+
+    .invoice-table {
+        min-width: 1100px;
+    }
+}
+
+
+/* =========================================================
+   SMALL SCREEN HEADER
+   ========================================================= */
+
+@media screen and (max-width: 600px) {
+
+    .shop-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .shop-title,
+    .bill-heading {
+        width: 100%;
+    }
+
+    .detail-row {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-row > div {
+        border-right: none;
+        border-bottom: 1px solid #111;
+    }
+
+    .detail-row > div:last-child {
+        border-bottom: none;
+    }
+
+    .customer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .customer-grid > div {
+        border-right: none;
+    }
+
+    .customer-grid > div:last-child {
+        border-bottom: none;
+    }
+
+    .bottom-section {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-info {
+        border-right: none;
+        border-bottom: 1px solid #111;
+    }
+
+    .totals-section {
+        width: 100%;
+    }
+
+    .signature-area {
+        gap: 20px;
+    }
+
+    .signature-box {
+        width: 45%;
+    }
 }
