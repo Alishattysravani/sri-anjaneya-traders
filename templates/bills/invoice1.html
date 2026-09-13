@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Invoice {{ bill.invoice_no }}</title>
+
+    <link
+        href="{{ url_for('static', filename='css/invoice.css') }}"
+        rel="stylesheet"
+    >
+</head>
+
+<body>
+
+<div class="invoice-container">
+
+    <!-- SHOP HEADER -->
+    <div class="shop-header">
+
+        <div class="shop-title">
+
+            <h1>SRI ANJANEYA TRADERS</h1>
+
+            <div>
+                Mukthapur, Bhoodan Pochampally
+            </div>
+
+            <div>
+                District: Yadadri Bhuvanagiri, Telangana
+            </div>
+
+            <div>
+                Phone: 9912134409
+            </div>
+
+
+            {% if settings.gst_number %}
+            <div>
+                <strong>GSTIN: {{ settings.gst_number }}</strong>
+            </div>
+            {% endif %}
+            <div>
+                <strong>Fertilizer Licence No: 3303121</strong>
+            </div>
+
+        </div>
+
+        <div class="bill-heading">
+
+            <h2>GST INVOICE</h2>
+
+            <h3>CASH / CREDIT BILL</h3>
+
+        </div>
+
+    </div>
+
+
+    <!-- BILL DETAILS -->
+    <div class="bill-details">
+
+        <div class="detail-row">
+
+            <div>
+                <strong>Bill No:</strong>
+                {{ bill.invoice_no }}
+            </div>
+
+            <div>
+                <strong>Date:</strong>
+                {{ bill.date.strftime('%d-%m-%Y') }}
+            </div>
+
+            <div>
+                <strong>Time:</strong>
+                {{ bill.created_at.strftime('%I:%M %p') if bill.created_at else '' }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTOMER / FARMER DETAILS -->
+    <div class="customer-section">
+
+        <div class="customer-title">
+            CUSTOMER / FARMER DETAILS
+        </div>
+
+        <div class="customer-grid">
+
+            <div>
+                <strong>Name:</strong>
+                {{ bill.customer.name }}
+            </div>
+
+            <div>
+                <strong>Phone:</strong>
+                {{ bill.customer.phone if bill.customer.phone else '' }}
+            </div>
+
+            <div>
+                <strong>Address:</strong>
+                {{ bill.customer.address if bill.customer.address else '' }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRODUCT TABLE -->
+    <table class="invoice-table">
+
+        <thead>
+
+            <tr>
+                <th>S.No.</th>
+                <th>Particulars / Product</th>
+                <th>HSN</th>
+                <th>Lot No.</th>
+                <th>Mfg. Dt.</th>
+                <th>Exp. Dt.</th>
+                <th>Packing</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Disc.</th>
+                <th>GST</th>
+                <th>Amount</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for item in bill.items %}
+
+            <tr>
+
+                <!-- S.NO -->
+                <td>
+                    {{ loop.index }}
+                </td>
+
+
+                <!-- PRODUCT -->
+                <td class="product-name">
+
+                    <strong>
+                        {{ item.product.name }}
+                    </strong>
+
+                    {% if item.product.brand %}
+                    <small>
+                        {{ item.product.brand.name }}
+                    </small>
+                    {% endif %}
+
+                </td>
+
+
+                <!-- HSN -->
+                <td>
+                    {{ item.product.hsn_code if item.product.hsn_code else '' }}
+                </td>
+
+
+                <!-- LOT / BATCH NUMBER -->
+                <td>
+                    {{ item.product.batch_number if item.product.batch_number else '' }}
+                </td>
+
+
+                <!-- MANUFACTURING DATE -->
+                <td>
+
+                    {% if item.product.manufacturing_date %}
+                        {{ item.product.manufacturing_date.strftime('%m/%Y') }}
+                    {% endif %}
+
+                </td>
+
+
+                <!-- EXPIRY DATE -->
+                <td>
+
+                    {% if item.product.expiry_date %}
+                        {{ item.product.expiry_date.strftime('%m/%Y') }}
+                    {% endif %}
+
+                </td>
+
+
+                <!-- PACKING -->
+                <td>
+
+                    {{ item.product.packing if item.product.packing else '' }}
+
+                </td>
+
+
+                <!-- QUANTITY -->
+                <td>
+
+                    {{ "%.2f"|format(item.quantity) }}
+
+                    {% if item.product.unit %}
+                        {{ item.product.unit.name }}
+                    {% endif %}
+
+                </td>
+
+
+                <!-- RATE -->
+                <td>
+
+                    ₹{{ "%.2f"|format(item.price) }}
+
+                </td>
+
+
+                <!-- DISCOUNT -->
+                <td>
+
+                    ₹0.00
+
+                </td>
+
+
+                <!-- GST -->
+                <td>
+
+                    {% if item.product.gst_percent %}
+
+                        {{ "%.2f"|format(item.product.gst_percent) }}%
+
+                    {% else %}
+
+                        0%
+
+                    {% endif %}
+
+                </td>
+
+
+                <!-- AMOUNT -->
+                <td>
+
+                    ₹{{ "%.2f"|format(item.total) }}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    <!-- BOTTOM SECTION -->
+    <div class="bottom-section">
+
+
+        <!-- LEFT SIDE PAYMENT INFORMATION -->
+        <div class="payment-info">
+
+            <div>
+                <strong>Payment Mode:</strong>
+                {{ bill.payment_mode }}
+            </div>
+
+            <div>
+                <strong>Paid Amount:</strong>
+                ₹{{ "%.2f"|format(bill.paid_amount) }}
+            </div>
+
+            <div>
+                <strong>Outstanding:</strong>
+                ₹{{ "%.2f"|format(bill.balance) }}
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE TOTALS -->
+        <div class="totals-section">
+
+            <table>
+
+                <tr>
+
+                    <td>
+                        Subtotal
+                    </td>
+
+                    <td>
+                        ₹{{ "%.2f"|format(bill.subtotal) }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Discount
+                    </td>
+
+                    <td>
+                        ₹{{ "%.2f"|format(bill.discount) }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        GST
+                    </td>
+
+                    <td>
+                        ₹{{ "%.2f"|format(bill.gst) }}
+                    </td>
+
+                </tr>
+
+
+                <tr class="grand-total">
+
+                    <td>
+                        GRAND TOTAL
+                    </td>
+
+                    <td>
+                        ₹{{ "%.2f"|format(bill.grand_total) }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- TERMS AND CONDITIONS -->
+    <div class="terms-section">
+
+        <strong>Terms & Conditions:</strong>
+
+        <ol>
+
+            <li>
+                Goods once sold will not be taken back.
+            </li>
+
+            <li>
+                Subject to local jurisdiction.
+            </li>
+
+            <li>
+                Payment should be made as per agreed terms.
+            </li>
+
+            <li>
+                All disputes are subject to jurisdiction.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+    <!-- SIGNATURES -->
+    <div class="signature-area">
+
+
+        <!-- CUSTOMER SIGNATURE -->
+        <div class="signature-box">
+
+            <div class="signature-space">
+            </div>
+
+            <strong>
+                Customer / Farmer Signature
+            </strong>
+
+        </div>
+
+
+        <!-- SELLER SIGNATURE -->
+        <div class="signature-box">
+
+            <div class="signature-space">
+            </div>
+
+            <strong>
+                For SRI ANJANEYA TRADERS
+            </strong>
+
+            <br>
+
+            <span>
+                Authorized Signature
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRINT BUTTONS -->
+    <div class="print-actions no-print">
+
+        <button
+            onclick="window.print()"
+            class="btn-print">
+            Print Invoice
+        </button>
+
+        <button
+            onclick="window.close()"
+            class="btn-close-win">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+</body>
+</html>
